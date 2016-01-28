@@ -25,6 +25,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.expedia.seiso.domain.Domain;
+import com.expedia.seiso.domain.entity.AnnotatedHealthStatus;
 import com.expedia.seiso.domain.entity.HealthStatus;
 import com.expedia.seiso.domain.entity.Node;
 import com.expedia.seiso.domain.entity.RotationStatus;
@@ -43,6 +44,7 @@ public class NodeEventHandlerTests {
 	
 	// Test data
 	@Mock private HealthStatus unknownHealthStatus;
+	@Mock private AnnotatedHealthStatus someAnnotatedHealthStatus;
 	@Mock private HealthStatus someHealthStatus;
 	@Mock private RotationStatus unknownRotationStatus;
 	@Mock private RotationStatus someRotationStatus;
@@ -63,7 +65,7 @@ public class NodeEventHandlerTests {
 		// @formatter:off
 		this.nodeWithNullStatuses = Node.builder().build();
 		this.nodeWithNonNullStatuses = Node.builder()
-				.healthStatus(someHealthStatus)
+				.healthStatus(someAnnotatedHealthStatus)
 				.aggregateRotationStatus(someRotationStatus)
 				.build();
 		// @formatter:on
@@ -99,7 +101,7 @@ public class NodeEventHandlerTests {
 	}
 	
 	private void assertStatuses(Node node, HealthStatus healthStatus, RotationStatus rotationStatus) {
-		assertEquals(healthStatus, node.getHealthStatus());
+		assertEquals(healthStatus, node.getHealthStatus().getStatusType());
 		assertEquals(rotationStatus, node.getAggregateRotationStatus());		
 	}
 }

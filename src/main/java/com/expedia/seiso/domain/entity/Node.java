@@ -24,6 +24,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -76,12 +77,13 @@ public class Node extends AbstractItem {
 	@JoinColumn(name = "machine_id")
 	private Machine machine;
 
+	@OneToOne
+	@JoinColumn(name = "annotated_health_status_id")
+	private AnnotatedHealthStatus healthStatus;
+	
 	@OneToMany(mappedBy = "node", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<NodeIpAddress> ipAddresses = new ArrayList<>();
 
-	@ManyToOne
-	@JoinColumn(name = "health_status_id")
-	private HealthStatus healthStatus;
 	
 	// We use this primarily to find node alerts. See NodeRepo.
 	@ManyToOne
