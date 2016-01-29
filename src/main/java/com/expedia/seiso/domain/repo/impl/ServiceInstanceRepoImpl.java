@@ -53,7 +53,8 @@ public class ServiceInstanceRepoImpl implements ServiceInstanceRepoCustom {
 			"    if(sum(case e_rs.ukey when 'enabled' then 0 else 1 end) = 0, 1, 0) all_endpoints_enabled " +
 			"  from " +
 			"    node n " +
-			"    left outer join health_status hs on n.health_status_id = hs.id " +
+			"    left outer join annotatedhealth_status ahs on n.annotated_health_status_id = ahs.id " +
+			"    left outer join health_status hs on ahs.health_status_id = hs.id " +
 			"    left outer join status_type st on hs.status_type_id = st.id " +
 			"    left outer join node_ip_address nip on nip.node_id = n.id " +
 			"    left outer join rotation_status nip_rs on nip_rs.id = nip.rotation_status_id " +
@@ -68,19 +69,20 @@ public class ServiceInstanceRepoImpl implements ServiceInstanceRepoCustom {
 	
 	private static final String HEALTH_BREAKDOWN_SQL = 
 			"select " +
-			"  if(n.health_status_id is null, 'Unknown', hs.name) status, " +
-			"  if(n.health_status_id is null, 'warning', st.ukey) type, " +
+			"  if(n.annotated_health_status_id is null, 'Unknown', hs.name) status, " +
+			"  if(n.annotated_health_status_id is null, 'warning', st.ukey) type, " +
 			"  count(*) num_nodes " +
 			"from " +
 			"  node n " +
-			"  left outer join health_status hs on n.health_status_id = hs.id " +
+			"  left outer join annotated_health_status ahs on n.annotated_health_status_id = ahs.id " +
+			"  left outer join health_status hs on ahs.health_status_id = hs.id " +
 			"  left outer join status_type st on hs.status_type_id = st.id, " +
 			"  service_instance si " +
 			"where " +
 			"  n.service_instance_id = si.id " +
 			"  and si.id = ? " +
 			"group by " +
-			"  if(n.health_status_id is null, 0, n.health_status_id)";
+			"  if(n.annotated_health_status_id is null, 0, n.annoated_health_status_id)";
 	
 	private static final String ROTATION_BREAKDOWN_SQL = 
 			"select " +

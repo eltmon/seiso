@@ -43,7 +43,8 @@ public interface ServiceInstanceDependencyRepo extends PagingAndSortingRepositor
 			"from " +
 			"  ServiceInstanceDependency sid left outer join sid.dependency si " +
 			"  left outer join si.nodes n " +
-			"  left outer join n.healthStatus hs " +
+			"  left outer join n.annotatedHealthStatus ahs " +
+			"  left outer join ahs.healthStatus hs " +
 			"  left outer join hs.statusType st " +
 			"where " +
 			"  sid.dependent.key = :key " +
@@ -58,7 +59,8 @@ public interface ServiceInstanceDependencyRepo extends PagingAndSortingRepositor
 			"from " +
 			"  ServiceInstanceDependency sid left outer join sid.dependent si " +
 			"  left outer join si.nodes n " +
-			"  left outer join n.healthStatus hs " +
+			"  left outer join n.annotatedHealthStatus ahs " +
+			"  left outer join ahs.healthStatus hs " +
 			"  left outer join hs.statusType st " +
 			"where " +
 			"  sid.dependency.key = :key " +

@@ -39,7 +39,8 @@ public interface NodeRepo extends PagingAndSortingRepository<Node, Long> {
 			"  n " +
 			"from " +
 			"  Node n " +
-			"  join n.healthStatus hs " +
+			"  join n.annotatedHealthStatus ahs " +
+			"  join ahs.healthStatus hs " +
 			"  join hs.statusType hst " +
 			"where " +
 			"  n.serviceInstance.key = :key " +
