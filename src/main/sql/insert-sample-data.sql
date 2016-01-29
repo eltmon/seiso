@@ -30,7 +30,7 @@
 
 
 -- =====================================================================================================================
--- Les procÃ©dures
+-- Les procédures
 -- =====================================================================================================================
 
 delimiter $$
@@ -153,7 +153,7 @@ begin
     set machine_id = machine_start_id + node_index - 1;
     set node_num = right(concat('000', node_index), 3);
     set node_name = concat(service_key, node_num, '-', env_key);
-    insert into node (name, version, service_instance_id, machine_id, health_status_id) values
+    insert into node (name, version, service_instance_id, machine_id, annotated_health_status_id) values
         (node_name, service_version, service_instance_id, machine_id, 1);
     set node_index = node_index + 1;
   end while;
@@ -243,7 +243,7 @@ delimiter ;
 
 
 -- =====================================================================================================================
--- Les donnÃ©es
+-- Les données
 -- =====================================================================================================================
 
 insert into source (id, ukey, base_uri, source_id) values
@@ -265,6 +265,12 @@ insert into health_status (id, ukey, name, status_type_id) values
   (1, 'healthy', 'Healthy', 5)
 , (2, 'degraded', 'Degraded', 6)
 , (3, 'down', 'Down', 1)
+  ;
+
+insert into annotated_health_status (id, details, health_status_id) values
+  (1, 'details1', 1)
+, (2, 'details2', 2)
+, (3, 'details3', 3)
   ;
 
 insert into person (id, username, first_name, last_name, title, email) values
