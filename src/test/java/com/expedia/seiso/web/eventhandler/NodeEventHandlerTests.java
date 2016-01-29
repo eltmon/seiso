@@ -65,7 +65,7 @@ public class NodeEventHandlerTests {
 		// @formatter:off
 		this.nodeWithNullStatuses = Node.builder().build();
 		this.nodeWithNonNullStatuses = Node.builder()
-				.healthStatus(someAnnotatedHealthStatus)
+				.annotatedHealthStatus(someAnnotatedHealthStatus)
 				.aggregateRotationStatus(someRotationStatus)
 				.build();
 		// @formatter:on
@@ -101,7 +101,7 @@ public class NodeEventHandlerTests {
 	}
 	
 	private void assertStatuses(Node node, HealthStatus healthStatus, RotationStatus rotationStatus) {
-		assertEquals(healthStatus, node.getHealthStatus().getStatusType());
+		assertEquals(healthStatus, node.getAnnotatedHealthStatus().getHealthStatus());
 		assertEquals(rotationStatus, node.getAggregateRotationStatus());		
 	}
 }

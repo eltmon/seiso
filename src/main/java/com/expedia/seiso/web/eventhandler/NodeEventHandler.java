@@ -82,8 +82,8 @@ public class NodeEventHandler {
 	}
 	
 	private void replaceNullStatusesWithUnknown(Node node) {
-		if (node.getHealthStatus().getStatusType() == null) {
-			node.getHealthStatus().setStatusType(unknownHealthStatus);
+		if (node.getAnnotatedHealthStatus().getHealthStatus() == null) {
+			node.getAnnotatedHealthStatus().setHealthStatus(unknownHealthStatus);
 		}
 		if (node.getAggregateRotationStatus() == null) {
 			node.setAggregateRotationStatus(unknownRotationStatus);

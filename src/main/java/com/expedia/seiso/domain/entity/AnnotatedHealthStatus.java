@@ -42,5 +42,5 @@ public class AnnotatedHealthStatus extends AbstractItem {
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "health_status_id")
-	private HealthStatus statusType;
+	private HealthStatus healthStatus;
 }

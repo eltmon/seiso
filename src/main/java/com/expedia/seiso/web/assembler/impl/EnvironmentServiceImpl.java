@@ -49,7 +49,7 @@ public class EnvironmentServiceImpl implements EnvironmentService {
 		val numNodes = siNodes.size();
 		int numHealthy = 0;
 		for (Node siN : siNodes) {
-			String healthKey = siN.getHealthStatus().getStatusType().getStatusType() != null ? siN.getHealthStatus().getStatusType().getStatusType().getKey() : "unknown";
+			String healthKey = siN.getAnnotatedHealthStatus().getHealthStatus().getStatusType() != null ? siN.getAnnotatedHealthStatus().getHealthStatus().getStatusType().getKey() : "unknown";
 			// TODO: There are more cases in which a node deemed healthy.
 			if (healthKey.equalsIgnoreCase("Healthy"))
 				numHealthy++;

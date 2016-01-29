@@ -41,7 +41,7 @@ public interface ServiceInstanceRepo extends
 			"  count(case when st.key in ('info', 'success') then 1 end) " +
 			"from " +
 			"  ServiceInstance si left outer join si.nodes n " +
-			"  left outer join n.healthStatus hs " +
+			"  left outer join n.annotatedHealthStatus hs " +
 			"  left outer join hs.statusType st " +
 			"where " +
 			"  si.service.key = :key " +

@@ -79,7 +79,7 @@ public class Node extends AbstractItem {
 
 	@OneToOne
 	@JoinColumn(name = "annotated_health_status_id")
-	private AnnotatedHealthStatus healthStatus;
+	private AnnotatedHealthStatus annotatedHealthStatus;
 	
 	@OneToMany(mappedBy = "node", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<NodeIpAddress> ipAddresses = new ArrayList<>();
