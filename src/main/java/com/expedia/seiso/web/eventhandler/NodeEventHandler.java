@@ -15,6 +15,8 @@
  */
 package com.expedia.seiso.web.eventhandler;
 
+import java.util.Date;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import com.expedia.seiso.domain.entity.HealthStatus;
 import com.expedia.seiso.domain.entity.Node;
 import com.expedia.seiso.domain.entity.RotationStatus;
 import com.expedia.seiso.domain.repo.HealthStatusRepo;
+import com.expedia.seiso.domain.repo.NodeRepo;
 import com.expedia.seiso.domain.repo.RotationStatusRepo;
 
 /**
@@ -36,6 +39,7 @@ import com.expedia.seiso.domain.repo.RotationStatusRepo;
 @RepositoryEventHandler(Node.class)
 @Component
 public class NodeEventHandler {
+	@Autowired private NodeRepo nodeRepo;
 	@Autowired private HealthStatusRepo healthStatusRepo;
 	@Autowired private RotationStatusRepo rotationStatusRepo;
 	
@@ -60,6 +64,8 @@ public class NodeEventHandler {
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Node node) {
 		replaceNullStatusesWithUnknown(node);
+		// Set the health status update time to "now"
+		node.setStatusTime(new Date());
 	}
 	
 	/**
@@ -79,6 +85,12 @@ public class NodeEventHandler {
 	@HandleBeforeSave
 	public void handleBeforeSave(Node node) {
 		replaceNullStatusesWithUnknown(node);
+		Node originalNode = nodeRepo.findOne(node.getId());
+		// If the health status is about to be updated, set the update time 
+		// to "now"
+		if (!originalNode.getHealthStatus().equals(node.getHealthStatus())){
+			node.setStatusTime(new Date());
+		}
 	}
 	
 	private void replaceNullStatusesWithUnknown(Node node) {

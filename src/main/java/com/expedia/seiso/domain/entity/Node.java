@@ -16,6 +16,7 @@
 package com.expedia.seiso.domain.entity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -82,6 +83,13 @@ public class Node extends AbstractItem {
 	@ManyToOne
 	@JoinColumn(name = "health_status_id")
 	private HealthStatus healthStatus;
+	
+	@Column(name = "status_time")
+	private Date statusTime;
+	
+	@Column(name = "status_comment")
+	@Size(max = 250)
+	private String statusComment;
 	
 	// We use this primarily to find node alerts. See NodeRepo.
 	@ManyToOne
