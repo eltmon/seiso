@@ -90,6 +90,18 @@ public class Node extends AbstractItem {
 	@Column(name = "status_comment")
 	@Size(max = 250)
 	private String statusComment;
+
+	/**
+	 * Link to diagnostic page around health status transitions.
+	 */
+	@Size(max = 250)
+	private String healthStatusLink;
+	
+	/**
+	 * Short reason for a health status transition.
+	 */
+	@Size(max = 250)
+	private String healthStatusReason;
 	
 	// We use this primarily to find node alerts. See NodeRepo.
 	@ManyToOne

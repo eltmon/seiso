@@ -20,6 +20,9 @@ import java.util.Date;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.core.annotation.HandleAfterCreate;
+import org.springframework.data.rest.core.annotation.HandleAfterDelete;
+import org.springframework.data.rest.core.annotation.HandleAfterSave;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
@@ -32,6 +35,7 @@ import com.expedia.seiso.domain.entity.RotationStatus;
 import com.expedia.seiso.domain.repo.HealthStatusRepo;
 import com.expedia.seiso.domain.repo.NodeRepo;
 import com.expedia.seiso.domain.repo.RotationStatusRepo;
+import com.expedia.seiso.gateway.NotificationGateway;
 
 /**
  * @author Willie Wheeler
@@ -39,9 +43,24 @@ import com.expedia.seiso.domain.repo.RotationStatusRepo;
 @RepositoryEventHandler(Node.class)
 @Component
 public class NodeEventHandler {
+<<<<<<< HEAD
 	@Autowired private NodeRepo nodeRepo;
 	@Autowired private HealthStatusRepo healthStatusRepo;
 	@Autowired private RotationStatusRepo rotationStatusRepo;
+=======
+	
+	@Autowired
+	private HealthStatusRepo healthStatusRepo;
+	
+	@Autowired
+	private RotationStatusRepo rotationStatusRepo;
+	
+	@Autowired
+	private NodeRepo nodeRepo;
+
+	@Autowired
+	private NotificationGateway notificationGateway;
+>>>>>>> master
 	
 	private HealthStatus unknownHealthStatus;
 	private RotationStatus unknownRotationStatus;
@@ -52,10 +71,11 @@ public class NodeEventHandler {
 		this.unknownHealthStatus = healthStatusRepo.findByKey(Domain.UNKNOWN_HEALTH_STATUS_KEY);
 		this.unknownRotationStatus = rotationStatusRepo.findByKey(Domain.UNKNOWN_ROTATION_STATUS_KEY);
 	}
-	
+
 	/**
-	 * If the health or aggregate rotation status is {@code null}, we initialize it to the corresponding "unknown"
-	 * status entity instead of leaving it null. This allows the UI to render missing/unknown statuses without doing
+	 * If the health or aggregate rotation status is {@code null}, we initialize
+	 * it to the corresponding "unknown" status entity instead of leaving it
+	 * null. This allows the UI to render missing/unknown statuses without doing
 	 * explicit null checks.
 	 * 
 	 * @param node
@@ -68,15 +88,21 @@ public class NodeEventHandler {
 		node.setStatusTime(new Date());
 	}
 	
+	@HandleAfterCreate
+	public void handleAfterCreate(Node node) {
+		notify(node, NotificationGateway.OP_CREATE);
+	}
+
 	/**
 	 * <p>
-	 * If the health or aggregate rotation status is {@code null}, we initialize it to the corresponding "unknown"
-	 * status entity instead of leaving it null. This allows the UI to render missing/unknown statuses without doing
+	 * If the health or aggregate rotation status is {@code null}, we initialize
+	 * it to the corresponding "unknown" status entity instead of leaving it
+	 * null. This allows the UI to render missing/unknown statuses without doing
 	 * explicit null checks.
 	 * </p>
 	 * <p>
-	 * Generally we shouldn't have to do this, since we try to prevent nodes from having {@code null} statuses, but
-	 * we're just being paranoid.
+	 * Generally we shouldn't have to do this, since we try to prevent nodes
+	 * from having {@code null} statuses, but we're just being paranoid.
 	 * </p>
 	 * 
 	 * @param node
@@ -93,6 +119,17 @@ public class NodeEventHandler {
 		}
 	}
 	
+	@HandleAfterSave
+	public void handleAfterSave(Node node) {
+		notify(node, NotificationGateway.OP_UPDATE);
+	}
+
+	@HandleAfterDelete
+	public void handleAfterDelete(Node node) {
+		notify(node, NotificationGateway.OP_DELETE);
+	}
+	
+	// TODO Move this somewhere else. It doesn't belong here. [WLW]
 	private void replaceNullStatusesWithUnknown(Node node) {
 		if (node.getHealthStatus() == null) {
 			node.setHealthStatus(unknownHealthStatus);
@@ -100,5 +137,9 @@ public class NodeEventHandler {
 		if (node.getAggregateRotationStatus() == null) {
 			node.setAggregateRotationStatus(unknownRotationStatus);
 		}
+	}
+	
+	private void notify(Node node, String op) {
+		notificationGateway.notify(node, node.getName(), op);
 	}
 }
