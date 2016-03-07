@@ -26,13 +26,12 @@ import org.springframework.http.MediaType;
 @Configuration
 @EnableWebMvc
 public class SeisoWebConfig extends WebMvcConfigurerAdapter {
-
-	/**
-	 * Default all API media response types to JSON
-	 */
-	@Override
+  /**
+   * Default all API media response types to JSON
+   */
+  @Override
   public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-		    configurer.ignoreAcceptHeader(true)
-					.defaultContentType(MediaType.APPLICATION_JSON);
-	}
+    configurer.ignoreAcceptHeader(true)
+    .defaultContentType(MediaType.APPLICATION_JSON);
+  }
 }
