@@ -15,6 +15,8 @@
  */
 package com.expedia.seiso;
 
+import com.expedia.seiso.domain.converters.ServiceInstanceKeytoIDConverter;
+import com.expedia.seiso.domain.entity.ServiceInstance;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,8 +28,24 @@ import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ConversionServiceFactoryBean;
+
+import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.convert.converter.ConverterRegistry;
+import org.springframework.core.convert.support.GenericConversionService;
+import org.springframework.format.FormatterRegistry;
+import org.springframework.format.support.DefaultFormattingConversionService;
+
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Willie Wheeler
@@ -37,6 +55,7 @@ import org.springframework.context.annotation.Configuration;
 public class SeisoIntegrationConfig {
 	@Autowired private SeisoProperties seisoProperties;
 	@Autowired private CachingConnectionFactory connectionFactory;
+	@Autowired private ServiceInstanceKeytoIDConverter serviceInstanceKeytoIDConverter = new ServiceInstanceKeytoIDConverter();
 	
 	@Bean
 	public RabbitAdmin rabbitAdmin() {
@@ -65,4 +84,46 @@ public class SeisoIntegrationConfig {
 		template.setMessageConverter(jsonMessageConverter());
 		return template;
 	}
+
+//	@Bean//(name="conversionService")
+//	public ConversionService getConversionService()
+//	{
+//		ConversionServiceFactoryBean bean = new ConversionServiceFactoryBean();
+//
+////		GenericConversionService cs = new GenericConversionService();
+////		cs.addConverter(serviceInstanceKeytoIDConverter);
+//		//ConversionServiceFactoryBean bean = new DefaultFormattingConversionService();
+//
+//		bean.setConverters( getConverters() );
+//		bean.afterPropertiesSet();
+//
+//		ConversionService object = bean.getObject();
+//		System.out.println(object);
+//	//
+	//	return object//;
+	//}//
+
+//	private Set<Converter> getConverters() //{//
+//
+//		Set<Converter> converters = new HashSet<Converter>()//;//
+//
+//		//converters.add( serviceInstanceKeytoIDConverter )//;
+//		// add here more custom converters, either as spring bean references or directly instantiate//d//
+//
+//		return converters//;
+//	}
+//	@PostConstruct
+//	@Bean
+//	private void registerConverters() {
+//		converterRegistry.addConverter(new ServiceInstanceKeytoIDConverter());
+//	}
+//public ConversionService getConversionService() {
+//	ConversionServiceFactoryBean bean =
+//	bean.  addConverter(String.class, ServiceInstanceKeytoIDConverter.class, stringToStateTypeConverter);
+//	return bean;
+//}
+//@Override
+//public void addFormatters(FormatterRegistry registry) {
+//
+//}
 }

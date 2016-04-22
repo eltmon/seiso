@@ -17,6 +17,9 @@ package com.expedia.seiso.domain.repo;
 
 import java.util.List;
 
+import com.expedia.seiso.domain.converters.ServiceInstanceKeytoIDConverter;
+import com.expedia.seiso.domain.entity.HealthStatus;
+import com.expedia.seiso.domain.entity.ServiceInstance;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -25,6 +28,8 @@ import org.springframework.data.repository.query.Param;
 
 import com.expedia.seiso.domain.entity.Node;
 import com.expedia.seiso.domain.repo.custom.NodeRepoCustom;
+
+import javax.persistence.Convert;
 
 /**
  * @author Willie Wheeler
@@ -53,6 +58,11 @@ public interface NodeRepo extends PagingAndSortingRepository<Node, Long>, NodeRe
 	
 	// Filed on behalf of Chris Brown:
 	// https://github.com/ExpediaDotCom/seiso/issues/202
+	Page<Node> findByServiceInstanceAndHealthStatus(
+			@Param("siKey") ServiceInstance serviceInstance,
+			@Param("hsKey") HealthStatus healthStatus,
+			Pageable pageable);
+
 	Page<Node> findByServiceInstanceKeyAndHealthStatusKey(
 			@Param("siKey") String siKey,
 			@Param("hsKey") String hsKey,
